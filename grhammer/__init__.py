@@ -6,6 +6,7 @@ __all__ = [
     'Literal',
     'Range',
     'Any',
+    'OneOf',
 ]
 
 from .parsers import *

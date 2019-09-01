@@ -9,6 +9,7 @@ __all__ = [
     'Literal',
     'Range',
     'Any',
+    'OneOf',
 ]
 
 class ParseResult:
@@ -110,6 +111,7 @@ class OneOf(Parser):
 
     def __init__(self, children):
         children = tuple(children)
+        assert(children)
         for child in children:
             assert(isinstance(child, Parser))
         self.children = children
@@ -120,7 +122,7 @@ class OneOf(Parser):
     def __str__(self):
         return "( {} )".format(" | ".join(map(str, self.children)))
 
-    def parser(self, document):
+    def parse(self, document):
         for child in self.children:
             result = child.parse(document)
             if ParseOk == type(result):
@@ -131,4 +133,4 @@ class OneOf(Parser):
     def generate(self, entropy):
         # FIXME: this ignores the ordering of the disjunction
         # this should get flagged in a proper test
-        return rng.one_of(entropy, self.children).generate()
+        return rng.one_of(entropy, self.children).generate(entropy)
