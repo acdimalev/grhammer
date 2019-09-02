@@ -5,7 +5,7 @@ import hypothesis.strategies as st
 from grhammer.parsers import ParseOk, ParseError
 import grhammer.parsers as parsers
 
-iterations = 64
+iterations = 32
 
 
 # primitive parsers
@@ -23,6 +23,9 @@ parser_any = lambda: st.builds(parsers.Any)
 parser_one_of = lambda children: st.deferred(
     lambda: st.builds(parsers.OneOf, st.lists(children, 1)),
 )
+parser_optional = lambda children: st.deferred(
+    lambda: st.builds(parsers.Optional, children),
+)
 parser_many = lambda children: st.deferred(
     lambda: st.builds(parsers.Many, children),
 )
@@ -37,6 +40,7 @@ parser_primitives = lambda: st.one_of(
 )
 parser_combinators = lambda children: st.one_of(
     parser_one_of(children),
+    parser_optional(children),
     parser_many(children),
 )
 st_parsers = lambda: st.one_of(
@@ -69,7 +73,7 @@ class TestParsers(TestCase):
         for _ in range(iterations):
             result = parser.parse(parser.generate(entropy))
             self.assertIsInstance(result, ParseOk)
-            self.assertEqual('', result.remaining)
+            self.assertEqual(0, len(result.remaining))
 
     @given(
         st.one_of(

@@ -7,6 +7,7 @@ __all__ = [
     'Range',
     'Any',
     'OneOf',
+    'Optional',
     'Many',
     'entropy',
 ]

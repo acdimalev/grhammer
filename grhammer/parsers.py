@@ -10,6 +10,7 @@ __all__ = [
     'Range',
     'Any',
     'OneOf',
+    'Optional',
     'Many',
 ]
 
@@ -142,6 +143,29 @@ class OneOf(Parser):
         if ParseError == type(result):
             return document
         return parser.generate(entropy)
+
+
+class Optional(Parser):
+
+    def __init__(self, child):
+        assert(isinstance(child, Parser))
+        self.child = child
+
+    def __repr__(self):
+        return "Optional({!r})".format(self.child)
+
+    def __str__(self):
+        return "[ {} ]".format(self.child)
+
+    def parse(self, document):
+        result = self.child.parse(document)
+        if ParseOk == type(result):
+            return ParseOk([result.matched], result.remaining)
+        else:
+            return ParseOk([], document)
+
+    def generate(self, entropy):
+        return self.child.generate(entropy) if rng.maybe(entropy) else ''
 
 
 class Many(Parser):
