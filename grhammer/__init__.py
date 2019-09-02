@@ -7,6 +7,9 @@ __all__ = [
     'Range',
     'Any',
     'OneOf',
+    'Many',
+    'entropy',
 ]
 
 from .parsers import *
+from .rng import entropy

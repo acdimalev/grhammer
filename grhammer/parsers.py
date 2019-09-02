@@ -10,6 +10,7 @@ __all__ = [
     'Range',
     'Any',
     'OneOf',
+    'Many',
 ]
 
 class ParseResult:
@@ -134,3 +135,38 @@ class OneOf(Parser):
         # FIXME: this ignores the ordering of the disjunction
         # this should get flagged in a proper test
         return rng.one_of(entropy, self.children).generate(entropy)
+
+
+class Many(Parser):
+
+    def __init__(self, child):
+        assert(isinstance(child, Parser))
+        self.child = child
+
+    def __repr__(self):
+        return "Many({!r})".format(self.child)
+
+    def __str__(self):
+        return "{{ {} }}".format(self.child)
+
+    def parse(self, document):
+        matched = []
+        remaining = document
+        while True:
+            result = self.child.parse(remaining)
+            if ParseError == type(result):
+                break
+            # FIXME: Implement timeout in property tests
+            #   to catch infinite loops.
+            # e.g.  `Many(Many(Any()))
+            if len(remaining) == len(result.remaining):
+                break
+            matched += [result.matched]
+            remaining = result.remaining
+        return ParseOk(matched, remaining)
+
+    def generate(self, entropy):
+        return ''.join(
+            self.child.generate(entropy)
+            for _ in range(rng.scale(entropy))
+        )

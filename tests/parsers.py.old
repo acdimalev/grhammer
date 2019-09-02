@@ -20,12 +20,16 @@ parser_any = lambda: st.builds(parsers.Any)
 
 # combinatorial parsers
 
-parser_one_of = lambda children: st.deferred(
-    lambda: st.builds(parsers.OneOf, st.lists(children, 1)),
-)
-parser_many = lambda children: st.deferred(
-    lambda: st.builds(parsers.Many, children),
-)
+def parser_one_of(children=None):
+    children = children or st_parsers()
+    return st.deferred(
+        lambda: st.builds(parsers.OneOf, st.lists(children, 1)),
+    )
+def parser_many(children=None):
+    children = children or st_parsers()
+    return st.deferred(
+        lambda: st.builds(parsers.Many, children),
+    )
 
 
 # parsers by category
@@ -35,10 +39,12 @@ parser_primitives = lambda: st.one_of(
     parser_ranges(),
     parser_any(),
 )
-parser_combinators = lambda children: st.one_of(
-    parser_one_of(children),
-    parser_many(children),
-)
+def parser_combinators(children=None):
+    children = children or st_parsers()
+    return st.one_of(
+        parser_one_of(children),
+        parser_many(children),
+    )
 st_parsers = lambda: st.one_of(
     parser_primitives(),
     parser_combinators(st.deferred(lambda: st_parsers())),
