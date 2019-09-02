@@ -132,9 +132,16 @@ class OneOf(Parser):
         return ParseError("Expected {} found {!r}".format(self, head))
 
     def generate(self, entropy):
-        # FIXME: this ignores the ordering of the disjunction
-        # this should get flagged in a proper test
-        return rng.one_of(entropy, self.children).generate(entropy)
+        # FIXME: Write a profiling suite.
+        n_child = rng.roll(entropy, len(self.children))
+        document = self.children[n_child].generate(entropy)
+        if 0 == n_child:
+            return document
+        parser = OneOf(self.children[:n_child])
+        result = parser.parse(document)
+        if ParseError == type(result):
+            return document
+        return parser.generate(entropy)
 
 
 class Many(Parser):

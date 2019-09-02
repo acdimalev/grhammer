@@ -61,7 +61,7 @@ third_generation_parsers = lambda: st.one_of(
 class TestParsers(TestCase):
 
     @given(
-        st_parsers(),
+        third_generation_parsers(),
         st.randoms(),
     )
     def test_generation_is_bounded_by_parsing(self, parser, random):
@@ -69,15 +69,15 @@ class TestParsers(TestCase):
         for _ in range(iterations):
             result = parser.parse(parser.generate(entropy))
             self.assertIsInstance(result, ParseOk)
-            self.assertEqual(result.remaining, '')
+            self.assertEqual('', result.remaining)
 
     @given(
         st.one_of(
             st.just(parsers.OneOf),
         ),
-        third_generation_parsers(),
-        third_generation_parsers(),
-        third_generation_parsers(),
+        second_generation_parsers(),
+        second_generation_parsers(),
+        second_generation_parsers(),
         st.randoms(),
     )
     def test_associativity(self, Parser, a, b, c, random):
