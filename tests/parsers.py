@@ -66,6 +66,14 @@ third_generation_parsers = lambda: st.one_of(
 )
 
 
+# special-purpose parsers
+
+# parsers that cannot match any document
+bad_parsers = lambda: st.one_of(
+    st.just(parsers.Sequence([parsers.Many(parsers.Any()), parsers.Literal('0')])),
+)
+
+
 class TestParsers(TestCase):
 
     @given(
@@ -99,3 +107,14 @@ class TestParsers(TestCase):
             reference = tuple(flat.parse(document))
             self.assertEqual(reference, tuple(left.parse(document)))
             self.assertEqual(reference, tuple(right.parse(document)))
+
+
+    @given(
+        bad_parsers(),
+        st.randoms(),
+    )
+    def test_bad_parsers_cannot_generate_documents(self, parser, random):
+        entropy = lambda k: k and random.getrandbits(k)
+        for _ in range(iterations):
+            with self.assertRaises(Exception):
+                parser.generate(entropy)
