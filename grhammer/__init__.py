@@ -2,6 +2,7 @@ __all__ = [
     'ParseResult',
     'ParseOk',
     'ParseError',
+    'GenerationException',
     'Parser',
     'Literal',
     'Range',

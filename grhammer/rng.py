@@ -54,6 +54,21 @@ def maybe(entropy):
 def scale(entropy):
     """From 0 to positive infinity."""
 
+    # FIXME: Improve generation performance
+    #   for testing viability.
+    # `scale_` has the desired properties of
+    #   periodically producing very large documents.
+
+    x = 0
+    while entropy(1):
+        x += 1
+
+    return x
+
+
+def scale_(entropy):
+    """From 0 to positive infinity."""
+
     # Double scale with each successive 1.
     bit_depth = 0
     while entropy(1):

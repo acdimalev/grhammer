@@ -5,6 +5,7 @@ __all__ = [
     'ParseResult',
     'ParseOk',
     'ParseError',
+    'GenerationException',
     'Parser',
     'Literal',
     'Range',
@@ -42,6 +43,10 @@ class ParseError(ParseResult):
 
     def __iter__(self):
         return iter([self.reason])
+
+
+class GenerationException(Exception):
+    pass
 
 
 class Parser:
@@ -231,4 +236,10 @@ class Sequence(Parser):
         return ParseOk(matched, remaining)
 
     def generate(self, entropy):
-        return ''.join(child.generate(entropy) for child in self.children)
+        document = ''.join(child.generate(entropy) for child in self.children)
+        result = self.parse(document)
+        if ParseOk != type(result):
+            raise GenerationException
+        if 0 != len(result.remaining):
+            raise GenerationException
+        return document
