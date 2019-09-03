@@ -9,6 +9,7 @@ __all__ = [
     'OneOf',
     'Optional',
     'Many',
+    'Sequence',
     'entropy',
 ]
 

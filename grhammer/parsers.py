@@ -12,6 +12,7 @@ __all__ = [
     'OneOf',
     'Optional',
     'Many',
+    'Sequence',
 ]
 
 class ParseResult:
@@ -201,3 +202,33 @@ class Many(Parser):
             self.child.generate(entropy)
             for _ in range(rng.scale(entropy))
         )
+
+
+class Sequence(Parser):
+
+    def __init__(self, children):
+        children = tuple(children)
+        assert(children)
+        for child in children:
+            assert(isinstance(child, Parser))
+        self.children = children
+
+    def __repr__(self):
+        return "Sequence({!r})".format(list(self.children))
+
+    def __str__(self):
+        return "( {} )".format(", ".join(map(str, self.children)))
+
+    def parse(self, document):
+        matched = []
+        remaining = document
+        for child in self.children:
+            result = child.parse(remaining)
+            if ParseError == type(result):
+                return result
+            matched += [result.matched]
+            remaining = result.remaining
+        return ParseOk(matched, remaining)
+
+    def generate(self, entropy):
+        return ''.join(child.generate(entropy) for child in self.children)

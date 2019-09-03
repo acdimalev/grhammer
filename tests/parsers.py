@@ -29,6 +29,9 @@ parser_optional = lambda children: st.deferred(
 parser_many = lambda children: st.deferred(
     lambda: st.builds(parsers.Many, children),
 )
+parser_sequence = lambda children: st.deferred(
+    lambda: st.builds(parsers.Sequence, st.lists(children, 1)),
+)
 
 
 # parsers by category
@@ -42,6 +45,7 @@ parser_combinators = lambda children: st.one_of(
     parser_one_of(children),
     parser_optional(children),
     parser_many(children),
+    parser_sequence(children),
 )
 st_parsers = lambda: st.one_of(
     parser_primitives(),
