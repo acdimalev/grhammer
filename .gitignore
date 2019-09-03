@@ -1,0 +1,4 @@
+*.pyc
+.hypothesis
+.pytest_cache
+grhammer.egg-info
