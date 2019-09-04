@@ -204,10 +204,16 @@ class Many(Parser):
         return ParseOk(matched, remaining)
 
     def generate(self, entropy):
-        return ''.join(
+        document = ''.join(
             self.child.generate(entropy)
             for _ in range(rng.scale(entropy))
         )
+        result = self.parse(document)
+        if ParseOk != type(result):
+            raise GenerationException
+        if 0 != len(result.remaining):
+            raise GenerationException
+        return document
 
 
 class Sequence(Parser):
