@@ -11,6 +11,7 @@ __all__ = [
     'Optional',
     'Many',
     'Sequence',
+    'Less',
     'entropy',
 ]
 

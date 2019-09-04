@@ -14,6 +14,7 @@ __all__ = [
     'Optional',
     'Many',
     'Sequence',
+    'Less',
 ]
 
 class ParseResult:
@@ -241,5 +242,30 @@ class Sequence(Parser):
         if ParseOk != type(result):
             raise GenerationException
         if 0 != len(result.remaining):
+            raise GenerationException
+        return document
+
+
+class Less(Parser):
+
+    def __init__(self, exception, rule):
+        self.exception = exception
+        self.rule = rule
+
+    def __repr__(self):
+        return "Less({!r}, {!r})".format(self.exception, self.rule)
+
+    def __str__(self):
+        return "{} - {}".format(self.rule, self.exception)
+
+    def parse(self, document):
+        result = self.exception.parse(document)
+        if ParseOk == type(result):
+            return ParseError("Found {!r}".format(result.matched))
+        return self.rule.parse(document)
+
+    def generate(self, entropy):
+        document = self.rule.generate(entropy)
+        if ParseOk == type(self.exception.parse(document)):
             raise GenerationException
         return document
