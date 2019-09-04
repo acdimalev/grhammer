@@ -20,11 +20,10 @@ def parsers_are_good(entropy, some_parsers):
 class TestParsers(TestCase):
 
     @given(
+        entropys(),
         parsers(),
-        randoms(),
     )
-    def test_generation_is_bounded_by_parsing(self, parser, random):
-        entropy = lambda k: k and random.getrandbits(k)
+    def test_generation_is_bounded_by_parsing(self, entropy, parser):
         assume(parsers_are_good(entropy, [parser]))
         for _ in range(iterations):
             # FIXME: Calculate statistics of bogus test pass.
@@ -36,16 +35,15 @@ class TestParsers(TestCase):
                 pass
 
     @given(
+        entropys(),
         one_of(
             just(OneOf),
         ),
         parsers_by_depth(4),
         parsers_by_depth(4),
         parsers_by_depth(4),
-        randoms(),
     )
-    def test_associativity(self, Parser, a, b, c, random):
-        entropy = lambda k: k and random.getrandbits(k)
+    def test_associativity(self, entropy, Parser, a, b, c):
         assume(parsers_are_good(entropy, [a, b, c]))
         left = Parser([Parser([a, b]), c])
         right = Parser([a, Parser([b, c])])
@@ -63,11 +61,10 @@ class TestParsers(TestCase):
 
 
     @given(
+        entropys(),
         bad_parsers(),
-        randoms(),
     )
-    def test_bad_parsers_cannot_generate_documents(self, parser, random):
-        entropy = lambda k: k and random.getrandbits(k)
+    def test_bad_parsers_cannot_generate_documents(self, entropy, parser):
         for _ in range(iterations):
             with self.assertRaises(Exception):
                 parser.generate(entropy)

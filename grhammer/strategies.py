@@ -70,7 +70,18 @@ def parsers_by_depth(n):
             combinatorial_parsers(previous_parsers),
         )
 
-# parsers that cannot match any document
-bad_parsers = lambda: one_of(
-    just(Sequence([Many(Any()), Literal('0')])),
-)
+def bad_parsers():
+    """Parsers that cannot match any document."""
+    return one_of(
+        just(Sequence([Many(Any()), Literal('0')])),
+    )
+
+
+# support strategies
+
+def entropys():
+    def from_random(random):
+        def entropy(n_bits):
+            return n_bits and random.getrandbits(n_bits)
+        return entropy
+    return randoms().map(from_random)
