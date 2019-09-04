@@ -1,1 +1,3 @@
 language: python
+install: skip
+script: python setup.py test
