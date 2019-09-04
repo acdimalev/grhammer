@@ -48,7 +48,6 @@ class TestParsers(TestCase):
         left = Parser([Parser([a, b]), c])
         right = Parser([a, Parser([b, c])])
         flat = Parser([a, b, c])
-        # FIXME: This is a lot of work for a single test cycle.
         for _ in range(iterations):
             # FIXME: Calculate statistics of bogus test pass.
             try:
@@ -58,7 +57,6 @@ class TestParsers(TestCase):
                 self.assertEqual(reference, tuple(right.parse(document)))
             except GenerationException:
                 pass
-
 
     @given(
         entropys(),
