@@ -59,14 +59,13 @@ st_parsers = lambda: st.one_of(
 
 # parsers by depth
 
-first_generation_parsers = lambda: parser_primitives()
-second_generation_parsers = lambda: st.one_of(
-    first_generation_parsers(),
-    parser_combinators(first_generation_parsers()),
-)
-third_generation_parsers = lambda: st.one_of(
-    second_generation_parsers(),
-    parser_combinators(second_generation_parsers()),
+parsers_by_depth = lambda n: (
+    parser_primitives()
+) if n == 1 else (
+    st.one_of(
+        parsers_by_depth(n - 1),
+        parser_combinators(parsers_by_depth(n - 1)),
+    )
 )
 
 
@@ -90,7 +89,7 @@ def parsers_are_good(entropy, some_parsers):
 class TestParsers(TestCase):
 
     @given(
-        third_generation_parsers(),
+        parsers_by_depth(3),
         st.randoms(),
     )
     def test_generation_is_bounded_by_parsing(self, parser, random):
@@ -109,9 +108,9 @@ class TestParsers(TestCase):
         st.one_of(
             st.just(parsers.OneOf),
         ),
-        second_generation_parsers(),
-        second_generation_parsers(),
-        second_generation_parsers(),
+        parsers_by_depth(2),
+        parsers_by_depth(2),
+        parsers_by_depth(2),
         st.randoms(),
     )
     def test_associativity(self, Parser, a, b, c, random):
