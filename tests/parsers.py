@@ -89,7 +89,7 @@ def parsers_are_good(entropy, some_parsers):
 class TestParsers(TestCase):
 
     @given(
-        parsers_by_depth(3),
+        st_parsers(),
         st.randoms(),
     )
     def test_generation_is_bounded_by_parsing(self, parser, random):
@@ -108,9 +108,9 @@ class TestParsers(TestCase):
         st.one_of(
             st.just(parsers.OneOf),
         ),
-        parsers_by_depth(2),
-        parsers_by_depth(2),
-        parsers_by_depth(2),
+        parsers_by_depth(4),
+        parsers_by_depth(4),
+        parsers_by_depth(4),
         st.randoms(),
     )
     def test_associativity(self, Parser, a, b, c, random):
