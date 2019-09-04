@@ -20,20 +20,20 @@ parser_any = lambda: st.builds(parsers.Any)
 
 # combinatorial parsers
 
-parser_one_of = lambda children: st.deferred(
-    lambda: st.builds(parsers.OneOf, st.lists(children, 1)),
+parser_one_of = lambda children: st.builds(
+    parsers.OneOf, st.lists(children, 1),
 )
-parser_optional = lambda children: st.deferred(
-    lambda: st.builds(parsers.Optional, children),
+parser_optional = lambda children: st.builds(
+    parsers.Optional, children,
 )
-parser_many = lambda children: st.deferred(
-    lambda: st.builds(parsers.Many, children),
+parser_many = lambda children: st.builds(
+    parsers.Many, children,
 )
-parser_sequence = lambda children: st.deferred(
-    lambda: st.builds(parsers.Sequence, st.lists(children, 1)),
+parser_sequence = lambda children: st.builds(
+    parsers.Sequence, st.lists(children, 1),
 )
-parser_less = lambda children: st.deferred(
-    lambda: st.builds(parsers.Less, children, children),
+parser_less = lambda children: st.builds(
+    parsers.Less, children, children,
 )
 
 
