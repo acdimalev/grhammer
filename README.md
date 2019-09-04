@@ -4,6 +4,8 @@ Grammar Hammer
 An experiment in implementing a simple parsing library with utilities for
 property testing.
 
+[![Build Status](https://travis-ci.org/acdimalev/grhammer.svg?branch=master)](https://travis-ci.org/acdimalev/grhammer)
+
 Please mind the [non-goals](NON-GOALS.md).
 
 This project is early-alpha, documentation is sparse, and interfaces are
