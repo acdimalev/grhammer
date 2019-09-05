@@ -105,6 +105,9 @@ class Any(Parser):
     def __repr__(self):
         return "Any()"
 
+    def __str__(self):
+        return "? any ?"
+
     def parse(self, document):
         (head, tail) = (document[:1], document[1:])
         if head:
