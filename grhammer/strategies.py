@@ -74,6 +74,7 @@ def bad_parsers():
     """Parsers that cannot match any document."""
     return one_of(
         just(Sequence([Many(Any()), Literal('0')])),
+        just(Less(Literal('0'), Literal('0'))),
     )
 
 
