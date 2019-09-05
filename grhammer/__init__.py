@@ -1,4 +1,5 @@
 __all__ = [
+    'Grammar',
     'ParseResult',
     'ParseOk',
     'ParseError',
@@ -15,5 +16,6 @@ __all__ = [
     'entropy',
 ]
 
+from .grammar import *
 from .parsers import *
 from .rng import entropy
