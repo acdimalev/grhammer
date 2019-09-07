@@ -11,7 +11,7 @@ iterations = 32
 def parsers_are_good(entropy, some_parsers):
     try:
         for parser in some_parsers:
-            parser.generate(entropy)
+            parser.generate(entropy, None)
     except GenerationException:
         return False
     return True
@@ -28,7 +28,7 @@ class TestParsers(TestCase):
         for _ in range(iterations):
             # FIXME: Calculate statistics of bogus test pass.
             try:
-                result = parser.parse(parser.generate(entropy))
+                result = parser.parse(parser.generate(entropy, None), None)
                 self.assertIsInstance(result, ParseOk)
                 self.assertEqual(0, len(result.remaining))
             except GenerationException:
@@ -51,10 +51,10 @@ class TestParsers(TestCase):
         for _ in range(iterations):
             # FIXME: Calculate statistics of bogus test pass.
             try:
-                document = flat.generate(entropy)
-                reference = tuple(flat.parse(document))
-                self.assertEqual(reference, tuple(left.parse(document)))
-                self.assertEqual(reference, tuple(right.parse(document)))
+                document = flat.generate(entropy, None)
+                reference = tuple(flat.parse(document, None))
+                self.assertEqual(reference, tuple(left.parse(document, None)))
+                self.assertEqual(reference, tuple(right.parse(document, None)))
             except GenerationException:
                 pass
 
@@ -65,4 +65,4 @@ class TestParsers(TestCase):
     def test_bad_parsers_cannot_generate_documents(self, entropy, parser):
         for _ in range(iterations):
             with self.assertRaises(Exception):
-                parser.generate(entropy)
+                parser.generate(entropy, None)
