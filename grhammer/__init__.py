@@ -1,5 +1,6 @@
 __all__ = [
     'Grammar',
+    'Term',
     'ParseResult',
     'ParseOk',
     'ParseError',
