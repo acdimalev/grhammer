@@ -10,18 +10,22 @@ __all__ = [
 class Grammar:
 
     def __init__(self, definition):
-        self._definition = definition
-        builder = GrammarBuilder()
-        parsers = definition(builder)
+        definition = dict(definition)
 
-        for (term, parser) in dict.items(parsers):
+        for (term, parser) in definition.items():
             if not isvalidterm(term):
                 raise ValueError("{!r} is an invalid term".format(term))
             setattr(self, term, GrammarTerm(self, parser))
 
-        self._terms = tuple(sorted(dict.keys(parsers)))
+        self._terms = tuple(sorted(definition.keys()))
 
         # TODO: validate that all builder terms are defined
+
+    def __repr__(self):
+        return "Grammar({!r})".format({
+            term: getattr(self, term).parser
+            for term in self._terms
+        })
 
     def __str__(self):
         return "\n".join(
@@ -49,17 +53,6 @@ class GrammarTerm:
         return self.parser.generate(entropy, self.grammar)
 
 
-class GrammarBuilder:
-
-    def __init__(self):
-        self._terms = set()
-
-    def __getattr__(self, name):
-        setattr(self, name, Term(name))
-        self._terms.add(name)
-        return getattr(self, name)
-
-
 class Term(Parser):
 
     def __init__(self, term):
@@ -68,7 +61,7 @@ class Term(Parser):
         self.term = term
 
     def __repr__(self):
-        return "Term({!r}, {!r})".format(self.term)
+        return "Term({!r})".format(self.term)
 
     def __str__(self):
         return self.term
