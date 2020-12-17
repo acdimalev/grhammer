@@ -55,10 +55,11 @@ def less_parsers(children):
 # categories of parsers
 
 def parsers():
-    return one_of(
+    x = one_of(
         primitive_parsers(),
-        combinatorial_parsers(deferred(lambda: parsers())),
+        combinatorial_parsers(deferred(lambda: x)),
     )
+    return x
 
 def parsers_by_depth(n):
     if 1 == n:
