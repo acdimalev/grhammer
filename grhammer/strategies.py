@@ -37,7 +37,7 @@ def combinatorial_parsers(children):
     )
 
 def one_of_parsers(children):
-    return builds(OneOf, lists(children, 1))
+    return builds(OneOf, lists(children, min_size=1))
 
 def optional_parsers(children):
     return builds(Optional, children)
@@ -46,7 +46,7 @@ def many_parsers(children):
     return builds(Many, children)
 
 def sequence_parsers(children):
-    return builds(Sequence, lists(children, 1))
+    return builds(Sequence, lists(children, min_size=1))
 
 def less_parsers(children):
     return builds(Less, children, children)

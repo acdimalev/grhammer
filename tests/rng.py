@@ -51,7 +51,7 @@ class TestRNG(TestCase):
             st.integers(),
             st.floats(),
             st.text(),
-        ), 1),
+        ), min_size=1),
         st.randoms(),
     )
     def test_one_of_range(self, options, random):
